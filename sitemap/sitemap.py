@@ -41,8 +41,11 @@ async def parse_links(url, links, not_visited):
 
 
 async def get_content(url):
+    await asyncio.sleep(1)
     response = await aiohttp.get(url)
-    return (await response.text())
+    data = await response.text()
+    response.close()
+    return data
 
 
 async def clean_link(link, domain):
