@@ -1,6 +1,7 @@
 import aiohttp
 import argparse
 import asyncio
+import async_timeout
 from urllib.parse import urlsplit
 
 from bs4 import BeautifulSoup
@@ -31,7 +32,7 @@ async def parse_links(url, links, not_visited):
     soup = BeautifulSoup(response, 'html.parser')
     domain = "{0.scheme}://{0.netloc}".format(urlsplit(url))
     for link in [h.get('href') for h in soup.find_all('a')]:
-        link = await clean_link(link, domain)
+        link = clean_link(link, domain)
         if link is not None:
             if link not in links:
                 links.append(link)
@@ -41,20 +42,19 @@ async def parse_links(url, links, not_visited):
 
 
 async def get_content(url):
-    await asyncio.sleep(1)
-    response = await aiohttp.get(url)
-    data = await response.text()
-    response.close()
-    return data
+    with async_timeout.timeout(20):
+        async with aiohttp.request('get', url) as response:
+            return await response.text()
 
 
-async def clean_link(link, domain):
+def clean_link(link, domain):
     if link is not None:
         if link.startswith('/') or link.startswith(domain):
             if link.startswith('/'):
                 link = '{}{}'.format(domain, link)
             if '?' in link:
                 link = link.split('?')[0]
+            bad_endings = ['.exe', ]
             return link
 
 
