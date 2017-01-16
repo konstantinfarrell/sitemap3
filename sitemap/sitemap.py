@@ -11,6 +11,9 @@ async def crawl(url, links=[], not_visited=[]):
         links.append(url)
     links, not_visited = await parse_links(url, links, not_visited)
 
+    # Tried this and it was really slow
+    # await asyncio.gather(*[crawl(link, links, not_visited) for link in not_visited])
+
     for link in not_visited:
         try:
             await crawl(link, links, not_visited)
@@ -26,17 +29,22 @@ async def parse_links(url, links, not_visited):
     soup = BeautifulSoup(response.content, 'html.parser')
     domain = "{0.scheme}://{0.netloc}".format(urlsplit(url))
     for link in [h.get('href') for h in soup.find_all('a')]:
+        link = clean_link(link, domain)
         if link is not None:
-            if link.startswith('/') or link.startswith(domain):
-                if link.startswith('/'):
-                    link = '{}{}'.format(domain, link)
-                if '?' in link:
-                    link = link.split('?')[0]
-                if link not in links:
-                    links.append(link)
-                    not_visited.append(link)
-                    print(link)
+            if link not in links:
+                links.append(link)
+                not_visited.append(link)
+                print(link)
     return links, not_visited
+
+
+def clean_link(link, domain):
+    if link.startswith('/') or link.startswith(domain):
+        if link.startswith('/'):
+            link = '{}{}'.format(domain, link)
+        if '?' in link:
+            link = link.split('?')[0]
+        return link
 
 
 def sitemap(url, output='sitemap.txt', write=True):
@@ -46,7 +54,7 @@ def sitemap(url, output='sitemap.txt', write=True):
     finally:
         loop.close()
     with open(output, 'w') as f:
-        f.write('\n'.join(result))
+        f.write(str('\n'.join(result)))
     return result
 
 
