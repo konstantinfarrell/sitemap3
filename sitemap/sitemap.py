@@ -63,12 +63,12 @@ def sitemap(url, output='sitemap.txt', write=True):
 
 
 def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("url", help="Base url of the site to be mapped")
+    parser = argparse.ArgumentParser()                                      # pragma: no cover
+    parser.add_argument("url", help="Base url of the site to be mapped")    # pragma: no cover
 
-    args = parser.parse_args()
+    args = parser.parse_args()                                              # pragma: no cover
 
-    sitemap(args.url)
+    sitemap(args.url)                                                       # pragma: no cover
 
 
 if __name__ == '__main__':
