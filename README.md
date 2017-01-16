@@ -5,9 +5,21 @@
 
 Sitemap3 is a basic sitemap generation utility written in Python 3.5.
 
+## Install
+
+    pip install sitemap3
+
+or
+
+    git clone git@github.com:konstantinfarrell/sitemap3.git
+    cd sitemap3
+    python setup.py install
+
+Don't forget a virtualenv
+
 ## Usage
 
-    python sitemap/sitemap.py <url>
+    python sitemap <url>
 
 ## TODO
 
