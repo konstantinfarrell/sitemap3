@@ -11,8 +11,10 @@ async def crawl(url, links=[], not_visited=[]):
         links.append(url)
     links, not_visited = await parse_links(url, links, not_visited)
 
-    # Tried this and it was really slow
-    await asyncio.wait([asyncio.ensure_future(crawl(link, links, not_visited)) for link in not_visited])
+    try:
+        await asyncio.wait([asyncio.ensure_future(crawl(link, links, not_visited)) for link in not_visited])
+    except ValueError:
+        pass
 
     #for link in not_visited:
     #    try:
