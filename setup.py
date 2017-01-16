@@ -37,5 +37,10 @@ setup(
         'Programming Language :: Python :: 3.5',
         'Topic :: Utilities',
         'Topic :: Internet'
-    ]
+    ],
+    entry_points={
+        'console_scripts': [
+            'sitemap = sitemap.sitemap:main',
+        ]
+    }
 )
