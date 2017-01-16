@@ -7,3 +7,4 @@ info
 build/
 dist/
 *.swp
+sitemap.txt
