@@ -1,7 +1,6 @@
 import aiohttp
 import argparse
 import asyncio
-import async_timeout
 from urllib.parse import urlsplit
 
 from bs4 import BeautifulSoup
@@ -46,9 +45,8 @@ async def parse_links(url, session, links, not_visited):
 
 async def get_content(url, session):
     await asyncio.sleep(1)
-    with async_timeout.timeout(20):
-        async with session.get(url) as response:
-            return await response.text()
+    async with session.get(url) as response:
+        return await response.text()
 
 
 def clean_link(link, domain):
