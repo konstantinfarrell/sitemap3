@@ -1,8 +1,8 @@
+import aiohttp
 import argparse
 import asyncio
 from urllib.parse import urlsplit
 
-import requests
 from bs4 import BeautifulSoup
 
 
@@ -25,8 +25,8 @@ async def crawl(url, links=[], not_visited=[]):
 async def parse_links(url, links, not_visited):
     if url in not_visited:
         not_visited.remove(url)
-    response = requests.get(url=url)
-    soup = BeautifulSoup(response.content, 'html.parser')
+    response = await get_content(url)
+    soup = BeautifulSoup(response, 'html.parser')
     domain = "{0.scheme}://{0.netloc}".format(urlsplit(url))
     for link in [h.get('href') for h in soup.find_all('a')]:
         link = await clean_link(link, domain)
@@ -36,6 +36,11 @@ async def parse_links(url, links, not_visited):
                 not_visited.append(link)
                 print(link)
     return links, not_visited
+
+
+async def get_content(url):
+    response = await aiohttp.get(url)
+    return (await response.text())
 
 
 async def clean_link(link, domain):
