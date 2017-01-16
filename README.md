@@ -1,8 +1,6 @@
 # Sitemap3
 
-Sitemap3 is a basic sitemap generation utility.
-
-Basic async now, more to come soon. Everything is under constructions so bear with me for a few.
+Sitemap3 is a basic sitemap generation utility written in Python 3.5.
 
 ## Usage
 
