@@ -7,3 +7,8 @@ Basic async now, more to come soon. Everything is under constructions so bear wi
 ## Usage
 
     python sitemap/sitemap.py <url>
+
+## TODO
+
+- Add xml support
+- Add full async support
