@@ -7,13 +7,16 @@ from urllib.parse import urlsplit
 from bs4 import BeautifulSoup
 
 
-async def crawl(url, links=[], not_visited=[]):
+async def crawl(url, session=None, links=[], not_visited=[]):
+    if not session:
+        with aiohttp.ClientSession() as session:
+            return await crawl(url, session, links, not_visited)
     if url not in links:
         links.append(url)
-    links, not_visited = await parse_links(url, links, not_visited)
+    links, not_visited = await parse_links(url, session, links, not_visited)
 
     try:
-        await asyncio.gather(*[asyncio.ensure_future(crawl(link, links, not_visited)) for link in not_visited])
+        await asyncio.wait([asyncio.ensure_future(crawl(link, session, links, not_visited)) for link in not_visited])
     except ValueError:
         pass
 
@@ -25,10 +28,10 @@ async def crawl(url, links=[], not_visited=[]):
     return links
 
 
-async def parse_links(url, links, not_visited):
+async def parse_links(url, session, links, not_visited):
     if url in not_visited:
         not_visited.remove(url)
-    response = await get_content(url)
+    response = await get_content(url, session)
     soup = BeautifulSoup(response, 'html.parser')
     domain = "{0.scheme}://{0.netloc}".format(urlsplit(url))
     for link in [h.get('href') for h in soup.find_all('a')]:
@@ -41,9 +44,10 @@ async def parse_links(url, links, not_visited):
     return links, not_visited
 
 
-async def get_content(url):
+async def get_content(url, session):
+    await asyncio.sleep(1)
     with async_timeout.timeout(20):
-        async with aiohttp.request('get', url) as response:
+        async with session.get(url) as response:
             return await response.text()
 
 
