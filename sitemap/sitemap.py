@@ -29,7 +29,7 @@ async def parse_links(url, links, not_visited):
     soup = BeautifulSoup(response.content, 'html.parser')
     domain = "{0.scheme}://{0.netloc}".format(urlsplit(url))
     for link in [h.get('href') for h in soup.find_all('a')]:
-        link = clean_link(link, domain)
+        link = await clean_link(link, domain)
         if link is not None:
             if link not in links:
                 links.append(link)
@@ -38,23 +38,27 @@ async def parse_links(url, links, not_visited):
     return links, not_visited
 
 
-def clean_link(link, domain):
-    if link.startswith('/') or link.startswith(domain):
-        if link.startswith('/'):
-            link = '{}{}'.format(domain, link)
-        if '?' in link:
-            link = link.split('?')[0]
-        return link
+async def clean_link(link, domain):
+    if link is not None:
+        if link.startswith('/') or link.startswith(domain):
+            if link.startswith('/'):
+                link = '{}{}'.format(domain, link)
+            if '?' in link:
+                link = link.split('?')[0]
+            return link
 
 
 def sitemap(url, output='sitemap.txt', write=True):
     loop = asyncio.get_event_loop()
+    if loop.is_closed():
+        loop = asyncio.new_event_loop()
     try:
         result = loop.run_until_complete(crawl(url))
     finally:
         loop.close()
-    with open(output, 'w') as f:
-        f.write(str('\n'.join(result)))
+    if write:
+        with open(output, 'w') as f:
+            f.write(str('\n'.join(result)))
     return result
 
 
