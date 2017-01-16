@@ -12,7 +12,7 @@ async def crawl(url, links=[], not_visited=[]):
     links, not_visited = await parse_links(url, links, not_visited)
 
     try:
-        await asyncio.wait([asyncio.ensure_future(crawl(link, links, not_visited)) for link in not_visited])
+        await asyncio.gather(*[asyncio.ensure_future(crawl(link, links, not_visited)) for link in not_visited])
     except ValueError:
         pass
 
