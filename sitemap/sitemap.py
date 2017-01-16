@@ -12,13 +12,13 @@ async def crawl(url, links=[], not_visited=[]):
     links, not_visited = await parse_links(url, links, not_visited)
 
     # Tried this and it was really slow
-    # await asyncio.gather(*[crawl(link, links, not_visited) for link in not_visited])
+    await asyncio.wait([asyncio.ensure_future(crawl(link, links, not_visited)) for link in not_visited])
 
-    for link in not_visited:
-        try:
-            await crawl(link, links, not_visited)
-        except RecursionError:
-            break
+    #for link in not_visited:
+    #    try:
+    #        await crawl(link, links, not_visited)
+    #    except RecursionError:
+    #        break
     return links
 
 
@@ -74,7 +74,3 @@ def main():
     args = parser.parse_args()                                              # pragma: no cover
 
     sitemap(args.url)                                                       # pragma: no cover
-
-
-if __name__ == '__main__':
-    main()
