@@ -1,6 +1,7 @@
 import aiohttp
 import argparse
 import asyncio
+import concurrent
 from urllib.parse import urlsplit
 
 from bs4 import BeautifulSoup
@@ -9,12 +10,15 @@ from bs4 import BeautifulSoup
 async def crawl(url, session=None, links=[], not_visited=[]):
     if not session:
         with aiohttp.ClientSession() as session:
-            return (await crawl(url, session, links, not_visited))
+            return await crawl_(url, session, links, not_visited)
+    else:
+        return await crawl_(url, session, links, not_visited)
+
+async def crawl_(url, session, links, not_visited):
     if url not in links:
         links.append(url)
     links, not_visited = await parse_links(url, session, links, not_visited)
 
-    #if len(not_visited) > 0 and not session.closed:
     try:
         await asyncio.gather(*[asyncio.ensure_future(crawl(link, session, links, not_visited)) for link in not_visited])
     except ValueError:
@@ -22,7 +26,7 @@ async def crawl(url, session=None, links=[], not_visited=[]):
 
     #for link in not_visited:
     #    try:
-    #        await crawl(link, links, not_visited)
+    #        await crawl(link, session, links, not_visited)
     #    except RecursionError:
     #        break
     return links
@@ -45,9 +49,8 @@ async def parse_links(url, session, links, not_visited):
 
 
 async def get_content(url, session):
-    await asyncio.sleep(1)
-    async with session.get(url, allow_redirects=False, timeout=60) as response:
-        return await response.text()
+    async with session.get(url, timeout=45) as response:
+        return (await response.text())
 
 
 def clean_link(link, domain):
@@ -65,9 +68,12 @@ def sitemap(url, output='sitemap.txt', write=True):
     loop = asyncio.get_event_loop()
     if loop.is_closed():
         loop = asyncio.new_event_loop()
+    executor = concurrent.futures.ThreadPoolExecutor(5)
+    loop.set_default_executor(executor)
     try:
-        result = loop.run_until_complete(crawl(url))
+        result = loop.run_until_complete(asyncio.wait([crawl(url)]))
     finally:
+        loop._default_executor.shutdown(wait=True)
         loop.close()
     if write:
         with open(output, 'w') as f:
