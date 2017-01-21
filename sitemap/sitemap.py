@@ -12,7 +12,11 @@ async def crawl(url, session=None, links=[], not_visited=[]):
         with aiohttp.ClientSession() as session:
             return await crawl_(url, session, links, not_visited)
     else:
-        return await crawl_(url, session, links, not_visited)
+        try:
+            return await crawl_(url, session, links, not_visited)
+        except RuntimeError as e:
+            print(e)
+
 
 async def crawl_(url, session, links, not_visited):
     if url not in links:
