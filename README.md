@@ -3,7 +3,8 @@
 
 # Sitemap3
 
-Sitemap3 is a basic sitemap generation utility written in Python 3.5.
+Sitemap3 is an async sitemap generation utility written in Python 3.5.
+It currently generates a list of urls within a website and writes them to `sitemap.txt`
 
 ## Install
 
@@ -19,9 +20,8 @@ Don't forget a virtualenv
 
 ## Usage
 
-    python sitemap <url>
+    sitemap <url>
 
 ## TODO
 
 - Add xml support
-- Add full async support
