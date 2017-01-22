@@ -12,10 +12,7 @@ async def crawl(url, session=None, links=[], not_visited=[]):
         with aiohttp.ClientSession() as session:
             return await crawl_(url, session, links, not_visited)
     else:
-        try:
-            return await crawl_(url, session, links, not_visited)
-        except RuntimeError as e:
-            print(e)
+        return await crawl_(url, session, links, not_visited)
 
 
 async def crawl_(url, session, links, not_visited):
@@ -28,11 +25,6 @@ async def crawl_(url, session, links, not_visited):
     except ValueError:
         pass
 
-    #for link in not_visited:
-    #    try:
-    #        await crawl(link, session, links, not_visited)
-    #    except RecursionError:
-    #        break
     return links
 
 
@@ -53,7 +45,7 @@ async def parse_links(url, session, links, not_visited):
 
 
 async def get_content(url, session):
-    async with session.get(url, timeout=45) as response:
+    async with session.get(url, timeout=60) as response:
         return (await response.text())
 
 
@@ -72,12 +64,12 @@ def sitemap(url, output='sitemap.txt', write=True):
     loop = asyncio.get_event_loop()
     if loop.is_closed():
         loop = asyncio.new_event_loop()
-    executor = concurrent.futures.ThreadPoolExecutor(5)
-    loop.set_default_executor(executor)
+    #executor = concurrent.futures.ThreadPoolExecutor(5)
+    #loop.set_default_executor(executor)
     try:
-        result = loop.run_until_complete(asyncio.wait([crawl(url)]))
+        loop.run_until_complete(asyncio.gather(*[crawl(url)]))
     finally:
-        loop._default_executor.shutdown(wait=True)
+        #loop._default_executor.shutdown(wait=True)
         loop.close()
     if write:
         with open(output, 'w') as f:
