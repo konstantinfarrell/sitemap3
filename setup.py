@@ -4,7 +4,7 @@ from setuptools import setup, find_packages
 from setuptools.command.install import install
 
 
-version = '0.0.2'
+version = '0.0.8'
 
 description = 'An async command line utility for generating a sitemap within a text file'
 current_dir = os.path.dirname(__file__)
@@ -24,6 +24,9 @@ setup(
     long_description=long_description,
     author='Konstantin Farrell',
     author_email='konstantinfarrell@gmail.com',
+    data_files=[
+        ("", ['README.md', 'LICENSE'])
+    ],
     install_requires=[
         'beautifulsoup4',
         'aiohttp'

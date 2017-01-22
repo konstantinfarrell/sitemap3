@@ -52,7 +52,6 @@ async def crawl(url):
                     if link is not None:
                         if link not in urls and link not in results:
                             urls.append(link)
-                            print(link)
 
 def clean_link(link, domain):
     avoid = ['.exe', '.pdf', ]
