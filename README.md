@@ -1,5 +1,5 @@
-[![Build Status](https://travis-ci.org/konstantinfarrell/sitemap3.svg?branch=master)](https://travis-ci.org/konstantinfarrell/sitemap3)
-[![Coverage Status](https://coveralls.io/repos/github/konstantinfarrell/sitemap3/badge.svg?branch=master)](https://coveralls.io/github/konstantinfarrell/sitemap3?branch=master)
+[![Build Status](https://travis-ci.org/konstantinfarrell/sitemap3.svg?branch=develop)](https://travis-ci.org/konstantinfarrell/sitemap3)
+[![Coverage Status](https://coveralls.io/repos/github/konstantinfarrell/sitemap3/badge.svg?branch=develop)](https://coveralls.io/github/konstantinfarrell/sitemap3?branch=develop)
 
 # Sitemap3
 
