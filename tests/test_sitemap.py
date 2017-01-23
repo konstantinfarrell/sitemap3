@@ -1,5 +1,5 @@
 from unittest import TestCase
-from sitemap.sitemap import sitemap
+from sitemap import sitemap
 
 
 class TestSiteMap(TestCase):
