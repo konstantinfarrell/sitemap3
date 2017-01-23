@@ -11,16 +11,20 @@ urls = []
 results = []
 
 
-def sitemap(url, output='sitemap.txt', write=True):
-    urls.append(url) # list of urls to check
+def sitemap(url, output='sitemap.txt', write=False, verbose=False):
+    """ Main mapping function.
+    Clears old results, adds the starting url to the pool of urls,
+    creates and runs an event loop, writes out if necessary.
+    """
     if len(results) > 0:
         del results[:]
+    urls.append(url) # list of urls to check
 
     loop = asyncio.get_event_loop()
     if loop.is_closed():
         loop = asyncio.new_event_loop()
 
-    loop.run_until_complete(asyncio.ensure_future(crawler(urls, results)))
+    loop.run_until_complete(asyncio.ensure_future(crawler(urls, results, verbose)))
 
     if write:
         with open(output, 'w') as f:
@@ -29,12 +33,17 @@ def sitemap(url, output='sitemap.txt', write=True):
     return results
 
 
-async def crawler(urls, results):
+async def crawler(urls, results, verbose):
+    """ Crawls urls that aren't already in the results list """
     while len(urls) > 0:
-        await asyncio.gather(*[asyncio.ensure_future(crawl(url)) for url in urls if url not in results])
+        await asyncio.gather(*[asyncio.ensure_future(crawl(url, verbose)) for url in urls if url not in results])
 
 
-async def crawl(url):
+async def crawl(url, verbose):
+    """ Moves current url from urls pool to results,
+    gets, cleans & parses html content for new urls,
+    appends new urls to urls pool.
+    """
     results.append(url)
     try:
         urls.remove(url)
@@ -52,9 +61,15 @@ async def crawl(url):
                     if link is not None:
                         if link not in urls and link not in results:
                             urls.append(link)
+                            if verbose:
+                                print(link)
+
 
 def clean_link(link, domain):
-    avoid = ['.exe', '.pdf', ]
+    """ Returns a cleaned url if it is worthwhile.
+    Otherwise returns None.
+    """
+    avoid = ['.exe', '.pdf', '.png', '.jpg', '.iso', '.bat', '.gz']
     if link is not None:
         for a in avoid:
             if link.endswith(a):
@@ -69,9 +84,18 @@ def clean_link(link, domain):
 
 
 def main():
-    parser = argparse.ArgumentParser()                                      # pragma: no cover
-    parser.add_argument("url", help="Base url of the site to be mapped")    # pragma: no cover
+    parser = argparse.ArgumentParser()                                                                          # pragma: no cover
+    parser.add_argument("-u", "--u", help="Base url of the site to be mapped", dest="url")                            # pragma: no cover
+    parser.add_argument("--w", help="Write output to file", dest="output")    # pragma: no cover
+    args = parser.parse_args()                                                                                  # pragma: no cover
 
-    args = parser.parse_args()                                              # pragma: no cover
+    if args.output:
+        sitemap(url=args.url, output=args.output, write=True)                                                   # pragma: no cover
+    elif args.url:
+        sitemap(url=args.url, verbose=True)                                                                     # pragma: no cover
+    else:
+        parser.print_help()
 
-    sitemap(args.url)                                                       # pragma: no cover
+
+if __name__ == '__main__':
+    main()

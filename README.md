@@ -20,7 +20,8 @@ Don't forget a virtualenv
 
 ## Usage
 
-    sitemap <url>
+    sitemap --u <url>
+    sitemap --u <url> --w <output>
 
 ## TODO
 
