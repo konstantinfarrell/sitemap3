@@ -4,7 +4,7 @@ from setuptools import setup, find_packages
 from setuptools.command.install import install
 
 
-version = '0.0.9'
+version = '0.1.0'
 
 description = 'An async command line utility for generating a sitemap within a text file'
 current_dir = os.path.dirname(__file__)
@@ -43,7 +43,7 @@ setup(
     ],
     entry_points={
         'console_scripts': [
-            'sitemap = sitemap.sitemap:main',
+            'sitemap = sitemap:main',
         ]
     }
 )

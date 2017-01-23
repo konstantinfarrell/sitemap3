@@ -20,8 +20,17 @@ Don't forget a virtualenv
 
 ## Usage
 
+From the shell
+
     sitemap --u <url>
     sitemap --u <url> --w <output>
+
+Within a script
+
+    from sitemap import sitemap
+
+    url = 'https://konstantinfarrell.github.io'
+    results = sitemap(url)
 
 ## TODO
 
