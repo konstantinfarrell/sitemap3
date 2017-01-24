@@ -4,7 +4,7 @@ from setuptools import setup, find_packages
 from setuptools.command.install import install
 
 
-version = '0.1.1'
+version = '0.1.2'
 
 description = 'An async command line utility for generating a sitemap within a text file'
 current_dir = os.path.dirname(__file__)
