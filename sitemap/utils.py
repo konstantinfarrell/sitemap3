@@ -3,7 +3,7 @@ def clean_link(link, domain):
     Otherwise returns None.
     """
     avoid = ['.exe', '.pdf', '.png', '.jpg', '.iso', '.bat', '.gz']
-    avoid_in_url = ['javascript:', 'mailto:', 'Javascript:',]
+    avoid_in_url = ['javascript:', 'mailto:', 'Javascript:', ]
     if link is not None:
         for a in avoid:
             if link.lower().endswith(a):

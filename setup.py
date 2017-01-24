@@ -1,12 +1,10 @@
 import os
-import sys
 from setuptools import setup, find_packages
-from setuptools.command.install import install
 
 
-version = '0.1.2'
+version = '0.1.3'
 
-description = 'An async command line utility for generating a sitemap within a text file'
+description = 'An async command line utility for generating a sitemap'
 current_dir = os.path.dirname(__file__)
 try:
     long_description = open(os.path.join(current_dir, 'README.md')).read()

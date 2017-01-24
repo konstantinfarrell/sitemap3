@@ -7,7 +7,7 @@ from urllib.parse import urlsplit
 
 from bs4 import BeautifulSoup
 
-from sitemap.utils import *
+from sitemap.utils import write_text_sitemap, clean_link
 
 # Have these at global scope so they remain shared.
 urls = []
@@ -75,18 +75,26 @@ def clean_content(content, url, verbose):
 
 
 def main():
-    parser = argparse.ArgumentParser()                                                                          # pragma: no cover
-    parser.add_argument("-u", "--u", help="Base url of the site to be mapped", dest="url")                      # pragma: no cover
-    parser.add_argument("--w", help="Write output to file", dest="output")                                      # pragma: no cover
-    args = parser.parse_args()                                                                                  # pragma: no cover
+    parser = argparse.ArgumentParser()                  # pragma: no cover
+    parser.add_argument(                                # pragma: no cover
+        "-u", "--u",                                    # pragma: no cover
+        help="Base url of the site to be mapped",       # pragma: no cover
+        dest="url"                                      # pragma: no cover
+    )                                                   # pragma: no cover
+    parser.add_argument(                                # pragma: no cover
+        "--w",                                          # pragma: no cover
+        help="Write output to file",                    # pragma: no cover
+        dest="output"                                   # pragma: no cover
+    )                                                   # pragma: no cover
+    args = parser.parse_args()                          # pragma: no cover
 
-    if args.output:                                                                                             # pragma: no cover
-        out = sitemap(url=args.url)                                                                             # pragma: no cover
+    if args.output:                                     # pragma: no cover
+        out = sitemap(url=args.url)                     # pragma: no cover
         write_text_sitemap(out, args.output)
-    elif args.url:                                                                                              # pragma: no cover
-        sitemap(url=args.url, verbose=True)                                                                     # pragma: no cover
-    else:                                                                                                       # pragma: no cover
-        parser.print_help()                                                                                     # pragma: no cover
+    elif args.url:                                      # pragma: no cover
+        sitemap(url=args.url, verbose=True)             # pragma: no cover
+    else:                                               # pragma: no cover
+        parser.print_help()                             # pragma: no cover
 
 
 if __name__ == '__main__':

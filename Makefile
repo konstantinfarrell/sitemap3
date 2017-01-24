@@ -38,7 +38,7 @@ travis-coverage:
 
 pep8:
 	clear
-	$(VENV_DIR)/bin/flake8 . --exclude .git,__pycache__,.env
+	$(VENV_DIR)/bin/flake8 . --exclude .git,__pycache__,.env,build,dist
 
 $(VENV_DIR):
 	virtualenv $(VENV_DIR)
