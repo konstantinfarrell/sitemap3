@@ -35,3 +35,7 @@ Within a script
 ## TODO
 
 - Add xml support
+
+## KNOWN BUGS
+
+- Larger sites may cause program to timeout
