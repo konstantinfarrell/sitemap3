@@ -9,13 +9,13 @@ class TestSiteMap(TestCase):
         self.biggest_site = 'https://learnxinyminutes.com'
 
     def test_sitemap(self):
-        results = sitemap(self.url, write=False)
+        results = sitemap(self.url)
         self.assertIsNotNone(results)
 
     def test_bigger_sitemap(self):
-        results = sitemap(self.bigger_site, write=False)
+        results = sitemap(self.bigger_site)
         self.assertIsNotNone(results)
 
     def test_biggest_sitemap(self):
-        results = sitemap(self.biggest_site, write=False)
+        results = sitemap(self.biggest_site)
         self.assertIsNotNone(results)
