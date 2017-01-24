@@ -8,11 +8,12 @@ from urllib.parse import urlsplit
 from bs4 import BeautifulSoup
 
 
+# Have these at global scope so they remain shared.
 urls = []
 results = []
 
 
-def sitemap(url, output='sitemap.txt', write=False, verbose=False):
+def sitemap(url, verbose=False):
     """ Main mapping function.
     Clears old results, adds the starting url to the pool of urls,
     creates and runs an event loop, writes out if necessary.
@@ -26,10 +27,6 @@ def sitemap(url, output='sitemap.txt', write=False, verbose=False):
         loop = asyncio.new_event_loop()
 
     loop.run_until_complete(asyncio.ensure_future(crawler(urls, results, verbose)))
-
-    if write:
-        with open(output, 'w') as f:
-            f.write(str('\n'.join(results)))
 
     return results
 
@@ -64,6 +61,7 @@ async def crawl(url, verbose):
 
 
 def clean_content(content, url, verbose):
+    """ Parse a webpage for links """
     soup = BeautifulSoup(content, 'html.parser')
     domain = "{0.scheme}://{0.netloc}".format(urlsplit(url))
     for link in [h.get('href') for h in soup.find_all('a')]:
@@ -101,6 +99,11 @@ def clean_link(link, domain):
                 return link
 
 
+def write_text_sitemap(results, output='sitemap.txt'):
+    with open(output, 'w') as f:
+        f.write(str('\n'.join(results)))
+
+
 def main():
     parser = argparse.ArgumentParser()                                                                          # pragma: no cover
     parser.add_argument("-u", "--u", help="Base url of the site to be mapped", dest="url")                      # pragma: no cover
@@ -108,7 +111,8 @@ def main():
     args = parser.parse_args()                                                                                  # pragma: no cover
 
     if args.output:                                                                                             # pragma: no cover
-        sitemap(url=args.url, output=args.output, write=True)                                                   # pragma: no cover
+        out = sitemap(url=args.url)                                                                             # pragma: no cover
+        write_text_sitemap(out, args.output)
     elif args.url:                                                                                              # pragma: no cover
         sitemap(url=args.url, verbose=True)                                                                     # pragma: no cover
     else:                                                                                                       # pragma: no cover
