@@ -35,7 +35,7 @@ def sitemap(url, verbose=False):
 async def crawler(urls, results, verbose):
     """ Crawls urls that aren't already in the results list """
     while len(urls) > 0:
-        await asyncio.gather(*[asyncio.ensure_future(crawl(url, verbose)) for url in urls if url not in results])
+        await asyncio.gather(*(asyncio.ensure_future(crawl(url, verbose)) for url in urls if url not in results))
 
 
 async def crawl(url, verbose):
